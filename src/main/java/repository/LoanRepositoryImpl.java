@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import financial.Loan;
+import utils.DateFormatter;
 
 public class LoanRepositoryImpl extends CrudRepository implements LoanRepository {
 
@@ -23,13 +24,14 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 
 	public void createLoan(Loan loan) {
 		String sql = "INSERT INTO Loans VALUES(?,?,?);";
-		execute(sql, loan.getLoanAmount().toString(), loan.getStartDate().toString(), loan.getEndDate().toString());
+		execute(sql, loan.getLoanAmount().toString(), DateFormatter.formatDateToString(loan.getStartDate()),
+				DateFormatter.formatDateToString(loan.getEndDate()));
 	}
 
 	public void updateLoan(Loan loan) {
 		String sql = "UPDATE Loans SET LoanAmount = ?, StartDate = ?, EndDate = ? WHERE LoanID = ?;";
-		execute(sql, loan.getLoanAmount().toString(), loan.getStartDate().toString(), loan.getEndDate().toString(),
-				String.valueOf(loan.getId()));
+		execute(sql, loan.getLoanAmount().toString(), DateFormatter.formatDateToString(loan.getStartDate()),
+				DateFormatter.formatDateToString(loan.getEndDate()), String.valueOf(loan.getId()));
 	}
 
 	public void deleteLoan(Loan loan) {
@@ -70,5 +72,5 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 }

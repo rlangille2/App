@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import financial.Loan;
-
 public abstract class CrudRepository {
 
 	private String connectionUrl = "jdbc:sqlserver://DESKTOP-4C6GE5G\\SQLEXPRESS:1433;databaseName=Syn;integratedSecurity=true";
