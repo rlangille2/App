@@ -3,6 +3,7 @@ package repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import financial.Loan;
 
@@ -40,8 +41,8 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 		return newLoan;
 	}
 
-	public ArrayList<Loan> findListOfLoans() {
-		ArrayList<Loan> listOfLoans = new ArrayList<>();
+	public List<Loan> findListOfLoans() {
+		List<Loan> listOfLoans = new ArrayList<>();
 		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans;";
 		ResultSet result = find(sql);
 		try {

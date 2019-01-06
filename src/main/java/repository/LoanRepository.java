@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import financial.Loan;
 
@@ -14,6 +15,6 @@ public interface LoanRepository {
 
 	public Loan findLoan(Loan loan);
 
-	public ArrayList<Loan> findListOfLoans();
+	public List<Loan> findListOfLoans();
 
 }
