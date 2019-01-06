@@ -37,6 +37,8 @@ public abstract class CrudRepository {
 			return result;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
+		} finally {
+			closeConnection(connection);
 		}
 	}
 
@@ -53,6 +55,8 @@ public abstract class CrudRepository {
 			return result;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
+		} finally {
+			closeConnection(connection);
 		}
 	}
 

@@ -9,6 +9,18 @@ import financial.Loan;
 
 public class LoanRepositoryImpl extends CrudRepository implements LoanRepository {
 
+	private static LoanRepositoryImpl singleton;
+
+	private LoanRepositoryImpl() {
+	};
+
+	public static LoanRepositoryImpl getInstance() {
+		if (singleton == null) {
+			singleton = new LoanRepositoryImpl();
+		}
+		return singleton;
+	}
+
 	public void createLoan(Loan loan) {
 		String sql = "INSERT INTO Loans VALUES(?,?,?);";
 		execute(sql, loan.getLoanAmount().toString(), loan.getStartDate().toString(), loan.getEndDate().toString());
@@ -26,19 +38,18 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 	}
 
 	public Loan findLoan(Loan loan) {
-		Loan newLoan = new Loan();
-		ResultSet result;
 		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans Where LoanID = ?;";
-		result = find(sql, String.valueOf(loan.getId()));
+		ResultSet result = find(sql, String.valueOf(loan.getId()));
 		try {
+			Loan newLoan = new Loan();
 			newLoan.setId(result.getInt("LoanID"));
 			newLoan.setLoanAmount(result.getBigDecimal("LoanAmount"));
 			newLoan.setStartDate(result.getDate("StartDate"));
 			newLoan.setEndDate(result.getDate("EndDate"));
+			return newLoan;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		return newLoan;
 	}
 
 	public List<Loan> findListOfLoans() {
@@ -54,10 +65,10 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 				loan.setEndDate(result.getDate("EndDate"));
 				listOfLoans.add(loan);
 			}
+			return listOfLoans;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		return listOfLoans;
 	}
-
+	
 }
