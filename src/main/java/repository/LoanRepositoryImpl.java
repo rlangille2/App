@@ -2,17 +2,18 @@ package repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import financial.Loan;
-import utils.DateFormatter;
 
 public class LoanRepositoryImpl extends CrudRepository implements LoanRepository {
 
 	private static LoanRepositoryImpl singleton;
 
 	private LoanRepositoryImpl() {
+		
 	};
 
 	public static LoanRepositoryImpl getInstance() {
@@ -23,15 +24,15 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 	}
 
 	public void createLoan(Loan loan) {
-		String sql = "INSERT INTO Loans VALUES(?,?,?);";
-		execute(sql, loan.getLoanAmount().toString(), DateFormatter.formatDateToString(loan.getStartDate()),
-				DateFormatter.formatDateToString(loan.getEndDate()));
+		String sql = "INSERT INTO Loans(LoanAmount, StartDate, EndDate) VALUES(?,?,?);";
+		execute(sql, loan.getLoanAmount().toString(), loan.getStartDate().toString(),
+				loan.getEndDate().toString());
 	}
 
 	public void updateLoan(Loan loan) {
 		String sql = "UPDATE Loans SET LoanAmount = ?, StartDate = ?, EndDate = ? WHERE LoanID = ?;";
-		execute(sql, loan.getLoanAmount().toString(), DateFormatter.formatDateToString(loan.getStartDate()),
-				DateFormatter.formatDateToString(loan.getEndDate()), String.valueOf(loan.getId()));
+		execute(sql, loan.getLoanAmount().toString(), loan.getStartDate().toString(),
+				loan.getEndDate().toString(), String.valueOf(loan.getId()));
 	}
 
 	public void deleteLoan(Loan loan) {
@@ -40,14 +41,14 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 	}
 
 	public Loan findLoan(Loan loan) {
-		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans Where LoanID = ?;";
+		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans WHERE LoanID = ?;";
 		ResultSet result = find(sql, String.valueOf(loan.getId()));
 		try {
 			Loan newLoan = new Loan();
 			newLoan.setId(result.getInt("LoanID"));
 			newLoan.setLoanAmount(result.getBigDecimal("LoanAmount"));
-			newLoan.setStartDate(result.getDate("StartDate"));
-			newLoan.setEndDate(result.getDate("EndDate"));
+			newLoan.setStartDate(LocalDate.parse(result.getString("StartDate")));
+			newLoan.setEndDate(LocalDate.parse(result.getString("EndDate")));
 			return newLoan;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -63,8 +64,8 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 				Loan loan = new Loan();
 				loan.setId(result.getInt("LoanID"));
 				loan.setLoanAmount(result.getBigDecimal("LoanAmount"));
-				loan.setStartDate(result.getDate("StartDate"));
-				loan.setEndDate(result.getDate("EndDate"));
+				loan.setStartDate(LocalDate.parse(result.getString("StartDate")));
+				loan.setEndDate(LocalDate.parse(result.getString("EndDate")));
 				listOfLoans.add(loan);
 			}
 			return listOfLoans;

@@ -16,7 +16,7 @@ public abstract class CrudRepository {
 			connection = getConnection();
 			PreparedStatement statement = connection.prepareStatement(sql);
 			for (int i = 0; i < parameters.length; i++) {
-				statement.setString(i, parameters[i]);
+				statement.setString(i + 1, parameters[i]);
 			}
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -25,7 +25,7 @@ public abstract class CrudRepository {
 			closeConnection(connection);
 		}
 	}
-
+	
 	protected ResultSet find(String sql) {
 		Connection connection = null;
 		try {
@@ -47,14 +47,14 @@ public abstract class CrudRepository {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			ResultSet result;
 			for (int i = 0; i < parameters.length; i++) {
-				statement.setString(i, parameters[i]);
+				statement.setString(i + 1, parameters[i]);
 			}
 			result = statement.executeQuery();
 			return result;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			closeConnection(connection);
+			closeConnection(connection); // this can't close connection because result deletes
 		}
 	}
 

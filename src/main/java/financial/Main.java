@@ -1,5 +1,8 @@
 package financial;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import repository.LoanRepositoryImpl;
 
 public class Main {
@@ -7,14 +10,14 @@ public class Main {
 	public static void main(String[] args) {
 		
 		Loan loan = new Loan();
-		loan.setId(3);
+		loan.setId(7);
 		LoanRepositoryImpl impl = LoanRepositoryImpl.getInstance();
-		Loan newLoan = impl.findLoan(loan);
-		System.out.println(newLoan.getId());
-		System.out.println(newLoan.getLoanAmount());
-		System.out.println(newLoan.getStartDate());
-		System.out.println(newLoan.getEndDate());
-		
+		impl.findLoan(loan);
+		loan = impl.findLoan(loan);
+		System.out.println(loan.getId());
+		System.out.println(loan.getLoanAmount());
+		System.out.println(loan.getStartDate());
+		System.out.println(loan.getEndDate());
 	}
 
 }

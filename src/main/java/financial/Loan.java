@@ -1,14 +1,14 @@
 package financial;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Loan {
 
 	private int loanId;
 	private BigDecimal loanAmount;
-	private Date startDate;
-	private Date endDate;
+	private LocalDate startDate;
+	private LocalDate endDate;
 
 	//Getters and Setters
 	
@@ -20,11 +20,11 @@ public class Loan {
 		return loanAmount;
 	}
 
-	public Date getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public Date getEndDate() {
+	public LocalDate getEndDate() {
 		return endDate;
 	}
 
@@ -36,11 +36,11 @@ public class Loan {
 		loanAmount = _loanAmount;
 	}
 
-	public void setStartDate(Date _startDate) {
+	public void setStartDate(LocalDate _startDate) {
 		startDate = _startDate;
 	}
 
-	public void setEndDate(Date _endDate) {
+	public void setEndDate(LocalDate _endDate) {
 		endDate = _endDate;
 	}
 
