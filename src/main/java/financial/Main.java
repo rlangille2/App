@@ -12,12 +12,11 @@ public class Main {
 		Loan loan = new Loan();
 		loan.setId(7);
 		LoanRepositoryImpl impl = LoanRepositoryImpl.getInstance();
-		impl.findLoan(loan);
 		loan = impl.findLoan(loan);
 		System.out.println(loan.getId());
-		System.out.println(loan.getLoanAmount());
-		System.out.println(loan.getStartDate());
-		System.out.println(loan.getEndDate());
+		//System.out.println(loan.getLoanAmount());
+		//System.out.println(loan.getStartDate());
+		//System.out.println(loan.getEndDate());
 	}
 
 }

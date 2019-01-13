@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class Loan {
 
-	private int loanId;
+	private Integer loanId;
 	private BigDecimal loanAmount;
 	private LocalDate startDate;
 	private LocalDate endDate;
@@ -15,7 +15,7 @@ public class Loan {
 	public int getId() {
 		return loanId;
 	}
-
+	
 	public BigDecimal getLoanAmount() {
 		return loanAmount;
 	}
@@ -28,7 +28,7 @@ public class Loan {
 		return endDate;
 	}
 
-	public void setId(int _loanId) {
+	public void setId(Integer _loanId) {
 		loanId = _loanId;
 	}
 

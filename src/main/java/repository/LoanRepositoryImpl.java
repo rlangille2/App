@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import financial.Loan;
 
@@ -42,17 +43,10 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 
 	public Loan findLoan(Loan loan) {
 		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans WHERE LoanID = ?;";
-		ResultSet result = find(sql, String.valueOf(loan.getId()));
-		try {
-			Loan newLoan = new Loan();
-			newLoan.setId(result.getInt("LoanID"));
-			newLoan.setLoanAmount(result.getBigDecimal("LoanAmount"));
-			newLoan.setStartDate(LocalDate.parse(result.getString("StartDate")));
-			newLoan.setEndDate(LocalDate.parse(result.getString("EndDate")));
-			return newLoan;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		Map<String, List<Object>> map = find(sql, String.valueOf(loan.getId()));
+		Loan newLoan = new Loan();
+		newLoan.setId(Integer.valueOf((map.get("LoanID").toString().replace("[", "").replace("]", ""))));
+		return newLoan;
 	}
 
 	public List<Loan> findListOfLoans() {

@@ -4,7 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class CrudRepository {
 
@@ -25,7 +30,7 @@ public abstract class CrudRepository {
 			closeConnection(connection);
 		}
 	}
-	
+
 	protected ResultSet find(String sql) {
 		Connection connection = null;
 		try {
@@ -40,21 +45,31 @@ public abstract class CrudRepository {
 		}
 	}
 
-	protected ResultSet find(String sql, String... parameters) {
+	protected Map<String, List<Object>> find(String sql, String... parameters) {
 		Connection connection = null;
 		try {
 			connection = getConnection();
 			PreparedStatement statement = connection.prepareStatement(sql);
-			ResultSet result;
 			for (int i = 0; i < parameters.length; i++) {
 				statement.setString(i + 1, parameters[i]);
 			}
-			result = statement.executeQuery();
-			return result;
+			ResultSet result = statement.executeQuery();
+			ResultSetMetaData md = result.getMetaData();
+			int columns = md.getColumnCount();
+			Map<String, List<Object>> map = new HashMap<>(columns);
+			for (int i = 0; i < columns; i++) {
+				map.put(md.getColumnName(i + 1), new ArrayList<>());
+			}
+			while (result.next()) {
+				for (int i = 0; i < columns; i++) {
+					map.get(md.getColumnName(i + 1)).add(result.getObject(i + 1));
+				}
+			}
+			return map;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			closeConnection(connection); // this can't close connection because result deletes
+			closeConnection(connection);
 		}
 	}
 
