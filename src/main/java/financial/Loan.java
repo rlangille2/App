@@ -10,8 +10,17 @@ public class Loan {
 	private LocalDate startDate;
 	private LocalDate endDate;
 
-	//Getters and Setters
-	
+	public Loan() {};
+
+	public Loan(int _loanId, BigDecimal _loanAmount, LocalDate _startDate, LocalDate _endDate) {
+		loanId = _loanId;
+		loanAmount = _loanAmount;
+		startDate = _startDate;
+		endDate = _endDate;
+	}
+
+	// Getters and Setters
+
 	public int getId() {
 		return loanId;
 	}
