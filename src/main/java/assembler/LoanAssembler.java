@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import financial.Loan;
+import domain.Loan;
 
 public class LoanAssembler implements Assembler<Loan> {
 

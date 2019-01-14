@@ -1,4 +1,4 @@
-package financial;
+package domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,7 +10,8 @@ public class Loan {
 	private LocalDate startDate;
 	private LocalDate endDate;
 
-	public Loan() {};
+	public Loan() {
+	};
 
 	public Loan(int _loanId, BigDecimal _loanAmount, LocalDate _startDate, LocalDate _endDate) {
 		loanId = _loanId;

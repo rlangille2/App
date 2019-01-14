@@ -2,18 +2,18 @@ package repository;
 
 import java.util.List;
 
-import financial.Loan;
+import domain.Loan;
 
 public interface LoanRepository {
 
-	public void createLoan(Loan loan);
+	public Loan select(int loanId);
 
-	public void updateLoan(Loan loan);
+	public List<Loan> selectAll();
 
-	public void deleteLoan(Loan loan);
+	public void insert(Loan loan);
 
-	public Loan selectLoan(int loanId);
+	public void update(Loan loan);
 
-	public List<Loan> selectAllLoans();
+	public void delete(Loan loan);
 
 }

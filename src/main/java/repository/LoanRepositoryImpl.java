@@ -3,7 +3,7 @@ package repository;
 import java.util.List;
 
 import assembler.LoanAssembler;
-import financial.Loan;
+import domain.Loan;
 
 public class LoanRepositoryImpl extends CrudRepository<Loan> implements LoanRepository {
 
@@ -20,30 +20,30 @@ public class LoanRepositoryImpl extends CrudRepository<Loan> implements LoanRepo
 		return singleton;
 	}
 	
-	public Loan selectLoan(int loanId) {
+	public Loan select(int loanId) {
 		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans WHERE LoanID = ?;";
 		List<Loan> resultList = find(sql, String.valueOf(loanId));
 		return resultList.get(0);
 	}
 	
-	public List<Loan> selectAllLoans() {
+	public List<Loan> selectAll() {
 		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans WHERE Enabled = ?;";
 		return find(sql, String.valueOf(1));
 	}	
 
-	public void createLoan(Loan loan) {
+	public void insert(Loan loan) {
 		String sql = "INSERT INTO Loans(LoanAmount, StartDate, EndDate) VALUES(?,?,?);";
 		execute(sql, loan.getLoanAmount().toString(), loan.getStartDate().toString(),
 				loan.getEndDate().toString());
 	}
 
-	public void updateLoan(Loan loan) {
+	public void update(Loan loan) {
 		String sql = "UPDATE Loans SET LoanAmount = ?, StartDate = ?, EndDate = ? WHERE LoanID = ?;";
 		execute(sql, loan.getLoanAmount().toString(), loan.getStartDate().toString(),
 				loan.getEndDate().toString(), String.valueOf(loan.getId()));
 	}
 
-	public void deleteLoan(Loan loan) {
+	public void delete(Loan loan) {
 		String sql = "DELETE FROM Loans WHERE LoanID = ?;";
 		execute(sql, String.valueOf(loan.getId()));
 	}
