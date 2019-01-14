@@ -4,16 +4,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public abstract class CrudRepository {
+import assembler.Assembler;
 
-	private String connectionUrl = "jdbc:sqlserver://DESKTOP-4C6GE5G\\SQLEXPRESS:1433;databaseName=Syn;integratedSecurity=true";
+public abstract class CrudRepository<T> {
+
+	private static final String CONNECTION_URL = "jdbc:sqlserver://DESKTOP-4C6GE5G\\SQLEXPRESS:1433;databaseName=Syn;integratedSecurity=true";
+	private Assembler<T> assembler;
+
+	public CrudRepository(Assembler<T> assembler) {
+		this.assembler = assembler;
+	}
 
 	protected void execute(String sql, String... parameters) {
 		Connection connection = null;
@@ -31,41 +35,21 @@ public abstract class CrudRepository {
 		}
 	}
 
-	protected ResultSet find(String sql) {
+	protected List<T> find(String sql, String... parameters) {
 		Connection connection = null;
 		try {
 			connection = getConnection();
 			PreparedStatement statement = connection.prepareStatement(sql);
-			ResultSet result = statement.executeQuery();
-			return result;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			closeConnection(connection);
-		}
-	}
-
-	protected Map<String, List<Object>> find(String sql, String... parameters) {
-		Connection connection = null;
-		try {
-			connection = getConnection();
-			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet result;
+			List<T> resultList = new ArrayList<>();
 			for (int i = 0; i < parameters.length; i++) {
 				statement.setString(i + 1, parameters[i]);
 			}
-			ResultSet result = statement.executeQuery();
-			ResultSetMetaData md = result.getMetaData();
-			int columns = md.getColumnCount();
-			Map<String, List<Object>> map = new HashMap<>(columns);
-			for (int i = 0; i < columns; i++) {
-				map.put(md.getColumnName(i + 1), new ArrayList<>());
-			}
+			result = statement.executeQuery();
 			while (result.next()) {
-				for (int i = 0; i < columns; i++) {
-					map.get(md.getColumnName(i + 1)).add(result.getObject(i + 1));
-				}
+				resultList.add(assembler.convert(result));
 			}
-			return map;
+			return resultList;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -75,7 +59,7 @@ public abstract class CrudRepository {
 
 	private Connection getConnection() {
 		try {
-			return DriverManager.getConnection(connectionUrl);
+			return DriverManager.getConnection(CONNECTION_URL);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

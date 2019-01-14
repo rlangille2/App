@@ -1,21 +1,17 @@
 package repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import assembler.LoanAssembler;
 import financial.Loan;
 
-public class LoanRepositoryImpl extends CrudRepository implements LoanRepository {
+public class LoanRepositoryImpl extends CrudRepository<Loan> implements LoanRepository {
 
 	private static LoanRepositoryImpl singleton;
 
 	private LoanRepositoryImpl() {
-		
-	};
+		super(new LoanAssembler());
+	}
 
 	public static LoanRepositoryImpl getInstance() {
 		if (singleton == null) {
@@ -23,6 +19,17 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 		}
 		return singleton;
 	}
+	
+	public Loan selectLoan(int loanId) {
+		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans WHERE LoanID = ?;";
+		List<Loan> resultList = find(sql, String.valueOf(loanId));
+		return resultList.get(0);
+	}
+	
+	public List<Loan> selectAllLoans() {
+		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans WHERE Enabled = ?;";
+		return find(sql, String.valueOf(1));
+	}	
 
 	public void createLoan(Loan loan) {
 		String sql = "INSERT INTO Loans(LoanAmount, StartDate, EndDate) VALUES(?,?,?);";
@@ -39,33 +46,6 @@ public class LoanRepositoryImpl extends CrudRepository implements LoanRepository
 	public void deleteLoan(Loan loan) {
 		String sql = "DELETE FROM Loans WHERE LoanID = ?;";
 		execute(sql, String.valueOf(loan.getId()));
-	}
-
-	public Loan findLoan(Loan loan) {
-		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans WHERE LoanID = ?;";
-		Map<String, List<Object>> map = find(sql, String.valueOf(loan.getId()));
-		Loan newLoan = new Loan();
-		newLoan.setId(Integer.valueOf((map.get("LoanID").toString().replace("[", "").replace("]", ""))));
-		return newLoan;
-	}
-
-	public List<Loan> findListOfLoans() {
-		List<Loan> listOfLoans = new ArrayList<>();
-		String sql = "SELECT LoanID, LoanAmount, StartDate, EndDate FROM Loans;";
-		ResultSet result = find(sql);
-		try {
-			while (result.next()) {
-				Loan loan = new Loan();
-				loan.setId(result.getInt("LoanID"));
-				loan.setLoanAmount(result.getBigDecimal("LoanAmount"));
-				loan.setStartDate(LocalDate.parse(result.getString("StartDate")));
-				loan.setEndDate(LocalDate.parse(result.getString("EndDate")));
-				listOfLoans.add(loan);
-			}
-			return listOfLoans;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 }
